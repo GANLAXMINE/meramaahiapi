@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete an Account - hitomatch.com</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- SweetAlert CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.css">
+    <style>
+        body {
+            background-color: white;
+            color: black;
+        }
+        .header {
+            background: linear-gradient(#FB8D7E, #FFC496);
+            color: black;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="row"style="align-items: flex-start;">
+        <button onclick="goBack()" class="btn btn-secondary">Back</button>
+        <div class="col-md-6 offset-md-3">
+            
+            <div class="card">
+                <div class="card-header header">
+                    
+                    <h3 class="text-center">Delete an Account</h3>
+                </div>
+                <div class="card-body">
+                    <form id="deleteAccountForm">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Delete Account</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- SweetAlert JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.getElementById('deleteAccountForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+        
+        const formData = new FormData(this);
+        
+        fetch('https://app.hitomatch.com/api/customer/delete-account', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to delete account. Please check your email and password and try again.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.message === 'Account Deleted Successfully') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Account Deleted',
+                    text: 'Your account has been successfully deleted.'
+                });
+                window.location.reload();
+            } else {
+                throw new Error('Failed to delete account. Please try again later.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error.message);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message
+            });
+        });
+    });
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+
+</body>
+</html>
