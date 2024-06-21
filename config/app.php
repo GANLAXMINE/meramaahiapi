@@ -51,7 +51,7 @@ return [
       | your application so that it is used when running Artisan tasks.
       |
      */
-    'APP_BASE_URL' => env('APP_BASE_URL','https://local'),
+    'APP_BASE_URL' => env('APP_BASE_URL','http://localhost/mera_maahi/public/'),
     'asset_url' => env('APP_BASE_URL', null).'public',
     /*
       |--------------------------------------------------------------------------

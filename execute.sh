@@ -1,5 +1,5 @@
-cd /www/wwwroot/hito_web/public
-git pull origin development-0.0.3
+cd /www/wwwroot/mera_maahi/public
+git pull origin master
 # php artisan migrate
 # php artisan migrate:fresh
 # composer dump-autoload
