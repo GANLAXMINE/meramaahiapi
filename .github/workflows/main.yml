@@ -5,7 +5,7 @@ on:
 
 jobs:
   run_pull:
-    name: run pull
+    name: Run Pull
     runs-on: ubuntu-latest
 
     steps:
@@ -29,7 +29,12 @@ jobs:
 
     - name: Connect and pull
       run: |
-        ssh -o StrictHostKeyChecking=no "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "cd ${{ secrets.WORK_DIR }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && exit"
+        ssh -o StrictHostKeyChecking=no "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" << 'EOF'
+          set -e
+          cd "${{ secrets.WORK_DIR }}"
+          git checkout "${{ secrets.MAIN_BRANCH }}"
+          git pull
+        EOF
       shell: bash
 
     - name: Cleanup
