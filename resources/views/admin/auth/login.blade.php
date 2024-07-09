@@ -33,9 +33,9 @@
                 </div> --}}
             </div>
         </div>
-        <div class="col-sm-6">
+        <!-- <div class="col-sm-6">
             <img src="{{ url('img/hito_login.png') }}" alt="" class="w-100">
-        </div>
+        </div> -->
     </div>
 <script>
     const togglePassword = document.querySelector('#togglePassword');

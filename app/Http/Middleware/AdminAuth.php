@@ -5,6 +5,8 @@ namespace App\Http\Middleware;
 use Closure;
 use Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
+
 class AdminAuth
 {
     /**
@@ -17,7 +19,7 @@ class AdminAuth
     public function handle($request, Closure $next)
     {
         // dd(Auth::guard('admin')->check());
-        if(Auth::guard('admin')->check()){
+        if(FacadesAuth::guard('admin')->check()){
             return $next($request);
         }
         return redirect('admin\login');

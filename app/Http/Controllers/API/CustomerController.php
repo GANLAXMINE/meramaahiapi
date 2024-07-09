@@ -62,7 +62,7 @@ class CustomerController extends Controller
         }
 
         try {
-            $user_id = Auth::id();
+            $user_id = $request->user_id;
             // dd($user_id);
 
             // Prepare data to be inserted or updated
@@ -82,16 +82,16 @@ class CustomerController extends Controller
                 "workplace" => $request->input('workplace'),
                 "profile_for" => $request->input('profile_for'),
                 "about_me" => $request->input('about_me'),
-                "user_id" => $user_id,
+                "passions" => $request->input('passions'),
             ];
             $userDetail = UserDetail::updateOrCreate(
                 ['user_id' => $user_id], // Search criteria
                 $value // Data to update or insert
             );
             // Return success response
-            return parent::success(['message' => 'User details updated successfully', 'userDetail' => $userDetail]);
+            return parent::success(['message' => 'User details Created successfully', 'userDetail' => $userDetail]);
         } catch (\Exception $ex) {
-            dd($ex);
+            // dd($ex);
             // Log any errors that occur during the process
             Log::error('Error updating user details: ' . $ex->getMessage());
 
@@ -100,10 +100,11 @@ class CustomerController extends Controller
         }
     }
 
-    public function userProfile(Request $request)
+    public function getProfile(Request $request)
     {
         try {
             $questionsCount = count(UserImage::where('user_id', auth()->id())->get());
+            // dd($questionsCount);
             $model = MyModel::select(['id', 'first_name', 'last_name', 'email', 'gender', 'dob', 'profile_image'])
                 ->with(['userDeatil', 'Images'])
                 ->where('id', auth()->id());
@@ -166,6 +167,7 @@ class CustomerController extends Controller
             $existingUserDetails = UserDetail::where('user_id', Auth::id())->first();
             $userDetailInput = [
                 "religion" => $request->input('religion', $existingUserDetails->religion),
+                "interest" => $request->interest ?? $existingUserDetails->interest,
                 "community" => $request->input('community', $existingUserDetails->community),
                 "relationship_status" => $request->input('relationship_status', $existingUserDetails->relationship_status),
                 "country" => $request->input('country', $existingUserDetails->country),
@@ -284,9 +286,11 @@ class CustomerController extends Controller
 
     public function imageUpload(Request $request)
     {
+        // Define validation rules
         $rules = [
+            'user_id' =>'required',
             'image' => 'required|array',
-
+            'image.*' => 'required|mimes:jpeg,png,jpg,gif|max:2048', // Validate each image
         ];
 
         // Validate the request data against defined rules
@@ -300,7 +304,11 @@ class CustomerController extends Controller
         try {
             $config = $this->config;
             $cloudinary = $this->cloudinary;
-            $user = UserDetail::where('user_id', Auth::id())->first();
+            $user = UserDetail::where('user_id', $request->user_id)->first();
+
+            if (!$user) {
+                return parent::error('User details not found.');
+            }
 
             if ($request->hasFile('image')) {
                 foreach ($request->file('image') as $image) {
@@ -325,21 +333,22 @@ class CustomerController extends Controller
                     ]);
 
                     // Save image details to database
-                    $questionImage = new UserImage();
-                    $questionImage->image = $imageUpload['secure_url'];
-                    $questionImage->thumb_image = $thumbImageUpload['secure_url'];
-                    $questionImage->user_detail_id = $user->id;
-                    $questionImage->user_id = Auth::id();
-                    $questionImage->save();
+                    $userImage = new UserImage();
+                    $userImage->image = $imageUpload['secure_url'];
+                    $userImage->thumb_image = $thumbImageUpload['secure_url'];
+                    $userImage->user_detail_id = $user->id;
+                    $userImage->user_id =$request->user_id;
+                    $userImage->save();
                 }
             }
 
             return parent::success(['message' => "Images uploaded successfully"]);
         } catch (\Exception $ex) {
-            Log::error('Image upload error: ' . $ex->getMessage());
-            return parent::error('Failed to upload images. Please try again.');
+            Log::error('General error: ' . $ex->getMessage());
+            return parent::error('Failed to upload images. Error: ' . $ex->getMessage());
         }
     }
+
 
     public function deleteProfileImage(Request $request)
     {

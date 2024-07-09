@@ -269,8 +269,14 @@ class AuthController extends ApiController
     }
     public function logout(Request $request)
     {
-        $rules = [];
+        // Define any rules for validation (if necessary)
+        $rules = [
+            'device_token' => 'required|string',
+            'device_type' => 'required|string'
+        ];
         $rules = array_merge($this->requiredParams, $rules);
+
+        // Validate the request attributes
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
 
         if ($validateAttributes) {
@@ -287,17 +293,16 @@ class AuthController extends ApiController
             // Revoke the OAuth access token
             DB::table('oauth_access_tokens')
                 ->where('user_id', Auth::id())
-                ->where('id', $request->device_token)
+                // ->where('id', $request->device_token)
                 ->delete();
-            $userLanguage = Auth::user()->language ?? 'en';
-            $messageType = 'logout_user';
-            $message = Message::getLocalizedMessage($messageType, $userLanguage);
 
-            return parent::success(['message' => $message]);
+            return parent::success(['message' => "Logout successfully"]);
         } catch (\Exception $ex) {
-            return parent::error($ex->getMessage());
+            Log::error('logout: ' . $ex->getMessage());
+            return parent::error('Failed to logout. Please try again.');
         }
     }
+
     public function resetPassword(Request $request)
     {
         $rules = ['type' => 'required|in:email,phone', $request['type'] => 'required|exists:users,' . $request['type'], 'password' => 'required', 'confirm_password' => 'required|same:password'];

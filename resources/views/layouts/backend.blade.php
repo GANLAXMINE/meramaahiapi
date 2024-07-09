@@ -8,7 +8,7 @@
     <link rel="apple-touch-icon" sizes="76x76" href="{{ url('img/admin_img.png') }}">
     <link rel="icon" type="image/png" href="{{ url('img/admin_img.png') }}">
     <title>
-        Hito-Match
+        Mera Maahi
     </title>
     <!--     Fonts and icons     -->
     <!-- <script src="demo_defer.js" defer></script> -->

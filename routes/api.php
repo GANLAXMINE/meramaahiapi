@@ -27,20 +27,12 @@ Route::group(['prefix' => 'user', 'namespace' => 'API'], function () {
     Route::post('register', 'AuthController@userRegister');
     Route::post('register/google', 'AuthController@userRegisterORLoginUsingGoogle');
     Route::post('register/apple', 'AuthController@userRegisterORLoginUsingApple');
-    Route::post('register/fb', 'AuthController@userRegisterORLoginUsingFb');
     Route::post('login', 'AuthController@CustomerLogin');
     Route::post('send-otp', 'AuthController@sentOtp');
     Route::post('forgot-password', 'AuthController@forgotPassword');
     Route::post('forgot-password-verify', 'AuthController@forgotPasswordVerify');
-});
-
-
-Route::group(['prefix' => 'user', 'middleware' => ['auth:api'], 'namespace' => 'API'], function () {
-    Route::post('updateProfile', 'AuthController@customerUpdate');
-    Route::get('getProfile', 'AuthController@getcustomerProfile');
-    Route::post('users-list', 'CustomerController@listUsers');
-    Route::post('user-detail', 'CustomerController@userDetail');
-    Route::post('get-profile', 'CustomerController@userProfile');
+    // Route::post('users-list', 'CustomerController@listUsers');
+    Route::post('get-profile', 'CustomerController@getProfile');
     Route::post('edit-profile', 'CustomerController@editProfile');
     Route::post('delete-profile-image', 'CustomerController@deleteProfileImage');
     Route::post('user-detail', 'CustomerController@userDetails');
@@ -48,11 +40,15 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:api'], 'namespace' => '
     Route::post('user-location', 'CustomerController@editLatLong');
 });
 
+
+Route::group(['prefix' => 'user',  'namespace' => 'API'], function () {
+});
+
 Route::group(['prefix' => 'user', 'middleware' => ['auth:api'], 'namespace' => 'API'], function () {
     Route::post('change-password', 'AuthController@changePassword');
 });
 
-Route::group(['middleware' => ['auth:api'], 'namespace' => 'API'], function () {
+Route::group(['namespace' => 'API'], function () {
     Route::post('logout', 'AuthController@logout');
     Route::post('deleteAccount', 'AuthController@deleteAccount');
 });
