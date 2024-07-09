@@ -231,6 +231,7 @@ class AuthController extends ApiController
             return parent::error($ex->getMessage());
         }
     }
+    
 
     public function forgotPasswordVerify(Request $request)
     {
@@ -267,7 +268,7 @@ class AuthController extends ApiController
             return parent::error($ex->getMessage());
         }
     }
-    
+
     public function logout(Request $request)
     {
         // Define any rules for validation (if necessary)
