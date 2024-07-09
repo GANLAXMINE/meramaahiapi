@@ -349,68 +349,6 @@ class AuthController extends ApiController
             return parent::error($ex->getMessage());
         }
     }
-
-    public function customerUpdate(Request $request)
-    {
-        $rules = ['first_name' => '', 'last_name' => ''];
-
-        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
-        if ($validateAttributes) :
-            return $validateAttributes;
-        endif;
-        try {
-            if (DB::table('role_user')->where('user_id', Auth::id())->value('role_id') != 1) {
-                return parent::error('Sorry You Are At Wrong Place');
-            }
-            $input = $request->all();
-            $user = MyModel::findOrFail(Auth::id());
-            if ($request->has('profile_image') && !empty($request->profile_image)) {
-                $file = $request->profile_image;
-                $ext = strtolower($file->getClientOriginalExtension());
-                $profile_image = parent::__uploadImage($file, public_path(MyModel::$_imagePublicPath), true);
-                $input['profile_image'] = $profile_image;
-            }
-            $user->fill($input);
-            $user->save();
-            return parent::successCreated(['message' => 'Updated Successfully', 'user' => MyModel::findOrFail(Auth::id())]);
-        } catch (\Exception $ex) {
-            return parent::error($ex->getMessage());
-        }
-    }
-
-
-    public function getcustomerProfile(Request $request)
-    {
-
-        try {
-            if (DB::table('role_user')->where('user_id', Auth::id())->value('role_id') != 1) {
-                return parent::error('Sorry You Are At Wrong Place');
-            }
-            // $user = MyModel::where('id',Auth::id())->first();
-            // dd($user);
-            return parent::success(['user' => Auth::user()]);
-        } catch (\Exception $ex) {
-            return parent::error($ex->getMessage());
-        }
-    }
-
-    public function getConfigurationByColumn(Request $request, $column)
-    {
-        $rules = [];
-        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
-        if ($validateAttributes) :
-            return $validateAttributes;
-        endif;
-        try {
-            if (!in_array($column, ['terms_and_conditions', 'privacy_policy', 'about_us', 'help_and_contact_us', 'cancellation_policy']))
-                return parent::error('Please use valid column');
-            $model = \App\Models\Configuration::first();
-            $var = $column;
-            return parent::success(['config' => $model->$var]);
-        } catch (\Exception $ex) {
-            return parent::error($ex->getMessage());
-        }
-    }
     public function userRegisterORLoginUsingGoogle(Request $request)
     {
         // Define validation rules
@@ -505,9 +443,6 @@ class AuthController extends ApiController
         }
     }
 
-
-
-
     public function userRegisterORLoginUsingApple(Request $request)
     {
         $rules = ['name' => '', 'email' => '', 'apple_id' => '', 'latitude' => '', 'longitude' => ''];
@@ -593,68 +528,6 @@ class AuthController extends ApiController
             ],);
         }
     }
-
-
-
-
-    public function userRegisterORLoginUsingFb(Request $request)
-    {
-        $rules = ['first_name' => '', 'email' => 'required', 'fb_id' => 'required'];
-        $rules = array_merge($this->requiredParams, $rules);
-        //        dd($rules,$request->all());
-        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
-        if ($validateAttributes) :
-            return $validateAttributes;
-        endif;
-        try {
-
-            $modelEmailCount = 0;
-            if ($request->email != null) :
-                //                $modelEmail = MyModel::where('email', $request->email)->whereNull('fb_id');
-                $modelEmail = MyModel::where('email', $request->email);
-                $modelEmailCount = $modelEmail->count();
-            endif;
-            //dd($request->email,$modelEmailCount);
-
-            $model = MyModel::where('fb_id', $request->fb_id);
-            //            dd($modelEmailCount);
-            if ($modelEmailCount != 0) {
-                $modelEmailId = $modelEmail->first()->id;
-                $user = MyModel::where('id', $modelEmailId)->update(['fb_id' => $request->fb_id]);
-                //            dd($modelEmail->first());
-                $user = MyModel::find($modelEmailId);
-                if ($user->social_type == null)
-                    return parent::error('User Already Exists');
-
-                $token = $user->createToken('netscape')->accessToken;
-                parent::addUserDeviceData($user, $request);
-                return parent::success(['message' => 'Login Successful With Updated Email', 'social_login' => true, 'token' => $token, 'user' => $user]);
-            } elseif ($model->count() == 0) {
-                $input = $request->all();
-                $input['social_type'] = 'Facebook';
-                $input['first_name'] = $request->first_name;
-                $user = MyModel::create($input);
-
-                // $user->assignRole(\App\Models\Role::where('id', 1)->first()->name);
-                // create user token for authorization
-                $token = $user->createToken('netscape')->accessToken;
-
-                parent::addUserDeviceData($user, $request);
-
-                return parent::successCreated(['status' => 200, 'message' => 'Account Created Successfully', 'social_login' => true,  'token' => $token, 'user' => $user]);
-            } else {
-                $user = MyModel::find($model->first()->id);
-
-                if ($user->social_type == null)
-                    return parent::error('User Already Exists');
-                $token = $user->createToken('netscape')->accessToken;
-                parent::addUserDeviceData($user, $request);
-                return parent::success(['message' => trans('api_AuthController.Login_Successfully'), 'social_login' => true, 'token' => $token, 'user' => $user]);
-            }
-        } catch (\Exception $ex) {
-            return parent::error($ex->getMessage());
-        }
-    }
     public function deleteAccount(Request $request)
     {
         try {
@@ -665,124 +538,14 @@ class AuthController extends ApiController
             }
 
             \App\Models\BlockUser::where('blocked_by', Auth::id())->delete();
-            \App\Models\BlockUser::where('blocked_user', Auth::id())->delete();
-            \App\Models\UserQuestion::where('user_id', Auth::id())->delete();
-            \App\Models\WhoViewedprofile::where('view_by', Auth::id())->delete();
-            \App\Models\UserLike::where('like_by', Auth::id())->delete();
-            \App\Models\UserBookmark::where('bookmark_by', Auth::id())->delete();
-            \App\Models\UserDislike::where('dislike_by', Auth::id())->delete();
-            \App\Models\WhoViewedprofile::where('view_user', Auth::id())->delete();
-            \App\Models\UserLike::where('like_user', Auth::id())->delete();
-            \App\Models\UserBookmark::where('bookmark_user', Auth::id())->delete();
-            \App\Models\UserDislike::where('dislike_user', Auth::id())->delete();
-            \App\Models\SurveyUserAnswer::where('receiver_id', Auth::id())->delete();
-            \App\Models\SurveyUserQuestion::where('receiver_id', Auth::id())->delete();
             Notification::whereRaw('JSON_UNQUOTE(JSON_EXTRACT(message, "$.created_by")) = ?', [Auth::id()])->delete();
 
-            $stripeCustomerId = $user->stripe_customer_id;
-
-            if ($stripeCustomerId) {
-                \Stripe\Stripe::setApiKey(config('app.stripe_sk_key'));
-
-                try {
-                    // Retrieve all subscriptions associated with the customer
-                    $subscriptions = \Stripe\Subscription::all(['customer' => $stripeCustomerId]);
-
-                    // Iterate over the retrieved subscriptions
-                    foreach ($subscriptions->data as $subscription) {
-                        // Retrieve the subscription object
-                        $stripeSubscription = \Stripe\Subscription::retrieve($subscription->id);
-                        // dump($stripeSubscription);
-
-                        // Cancel and delete the subscription
-                        $stripeSubscription->cancel(['invoice_now' => true]);
-                        $stripeSubscription->delete();
-                    }
-                    // Send email notification for subscription cancellation
-                    $subject = 'Your Subscription Has Been Cancelled';
-                    // dd($subject);
-                    Log::info('Subscription cancelled for user: ' . $user->email);
-
-                    // Send email using Mail facade
-                    Mail::send('emails.subscription_cancelled', ['user' => $user, 'subject' => $subject], function ($message) use ($user, $subject) {
-                        $message->to($user->email)->subject($subject);
-                        // Log success
-                        Log::info('Email sent successfully to: ' . $user->email);
-                    });
-                    // dd($user->email);
-                } catch (\Exception $e) {
-                    // Handle any errors occurred during retrieval of subscriptions
-                    Log::error('Error: ' . $e->getMessage());
-                }
-            }
-            // dd('hello');
-            // Delete the user
             $user->delete();
-            $userLanguage = $user->language ?? 'en';
-            $messageType = 'account_delete';
-            $message = Message::getLocalizedMessage($messageType, $userLanguage);
-
-            return parent::success(['message' => $message]);
+          return parent::success(['message' => "SUCCESS"]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
     }
-
-    public function deleteAccountUsingEmail(Request $request)
-    {
-        $rules = [
-            'email' => 'required|email',
-            'password' => 'required',
-        ];
-
-        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
-
-        if ($validateAttributes) {
-            return $validateAttributes;
-        }
-
-        try {
-            $user = \App\Models\User::where('email', $request->input('email'))->first();
-
-            // Check if user exists and verify password
-            if ($user && Hash::check($request->input('password'), $user->password)) {
-                // Delete related data
-                \App\Models\BlockUser::where('blocked_by', $user->id)->delete();
-                \App\Models\BlockUser::where('blocked_user', $user->id)->delete();
-                \App\Models\UserQuestion::where('user_id', $user->id)->delete();
-                \App\Models\WhoViewedprofile::where('view_by', $user->id)->delete();
-                \App\Models\UserLike::where('like_by', $user->id)->delete();
-                \App\Models\UserBookmark::where('bookmark_by', $user->id)->delete();
-                \App\Models\UserDislike::where('dislike_by', $user->id)->delete();
-                \App\Models\WhoViewedprofile::where('view_user', $user->id)->delete();
-                \App\Models\UserLike::where('like_user', $user->id)->delete();
-                \App\Models\UserBookmark::where('bookmark_user', $user->id)->delete();
-                \App\Models\UserDislike::where('dislike_user', $user->id)->delete();
-                \App\Models\SurveyAnswer::where('receiver_id', $user->id)->delete();
-                \App\Models\QuestionMessage::where('receiver_id', $user->id)->delete();
-                \App\Models\Notification::whereRaw('JSON_UNQUOTE(JSON_EXTRACT(message, "$.target_id")) = ?', [$user->id])
-                    ->orWhereRaw('JSON_UNQUOTE(JSON_EXTRACT(message, "$.created_by")) = ?', [$user->id])
-                    ->delete();
-                \App\Models\Notification::where('target_id', $user->id)->orWhere('created_by', $user->id)->delete();
-                $user->userChats()->delete();
-
-                // Delete the user
-                $user->delete();
-
-                return response()->json(['message' => 'Account Deleted Successfully'], 200);
-            } else {
-                // Password is incorrect or user not found
-                return response()->json(['error' => 'Incorrect email or password'], 401);
-            }
-        } catch (\Exception $ex) {
-            // Log the exception for debugging
-            Log::error($ex);
-
-            // Return a generic error message
-            return response()->json(['error' => 'An unexpected error occurred. Please try again later.'], 500);
-        }
-    }
-
 
     public function forgotPassword(Request $request, Factory $view)
     {
