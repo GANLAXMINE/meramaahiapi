@@ -77,7 +77,8 @@ class AuthController extends ApiController
                 'dob'              => '',
                 'address'          => '',
                 'latitude'         => '',
-                'longitude'        => ''
+                'longitude'        => '',
+                'is_verify'        =>''
             ];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes) :
@@ -231,7 +232,7 @@ class AuthController extends ApiController
             return parent::error($ex->getMessage());
         }
     }
-    
+
 
     public function forgotPasswordVerify(Request $request)
     {
