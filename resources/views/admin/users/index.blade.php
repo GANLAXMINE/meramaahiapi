@@ -119,52 +119,52 @@
                     data: 'email',
                     name: 'email'
                 },
-                {
-                    data: 'address',
-                    name: 'address',
-                    render: function(data, type, row) {
-                        return data ? data : 'N/A';
-                    }
-                }, {
-                    data: 'gender',
-                    name: 'gender',
-                    render: function(data) {
-                        return genders[data] || 'N/A';
-                    }
-                },
-                {
-                    data: 'interested',
-                    name: 'interested',
-                    render: function(data) {
+                // {
+                //     data: 'address',
+                //     name: 'address',
+                //     render: function(data, type, row) {
+                //         return data ? data : 'N/A';
+                //     }
+                // }, {
+                //     data: 'gender',
+                //     name: 'gender',
+                //     render: function(data) {
+                //         return genders[data] || 'N/A';
+                //     }
+                // },
+                // {
+                //     data: 'interested',
+                //     name: 'interested',
+                //     render: function(data) {
 
-                        return genders[data] || 'N/A';
-                    }
-                },
+                //         return genders[data] || 'N/A';
+                //     }
+                // },
 
-                {
-                    data: 'is_block_by_admin',
-                    name: 'is_block_by_admin'
-                },
-                {
-                    data: 'verification_status',
-                    name: 'verification_status'
-                },
+                // {
+                //     data: 'is_block_by_admin',
+                //     name: 'is_block_by_admin'
+                // },
+                // {
+                //     data: 'verification_status',
+                //     name: 'verification_status'
+                // },
                 {
                     data: 'created_at',
                     name: 'created_at'
                 },
-                {
-                    data: 'question_answer',
-                    name: 'question_answer',
-                    orderable: false,
-                    searchable: false
-                },
-                {
-                    data: 'date_question_answer',
-                    name: 'date_question_answer',
-                    orderable: false,
-                    searchable: false
-                },
+                // {
+                //     data: 'question_answer',
+                //     name: 'question_answer',
+                //     orderable: false,
+                //     searchable: false
+                // },
+                // {
+                //     data: 'date_question_answer',
+                //     name: 'date_question_answer',
+                //     orderable: false,
+                //     searchable: false
+                // },
                 {
                     data: 'action',
                     name: 'action',
