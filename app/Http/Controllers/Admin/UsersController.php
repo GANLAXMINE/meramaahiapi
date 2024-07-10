@@ -46,8 +46,8 @@ class UsersController extends Controller
             $orderDirection = $request->input('order.0.dir', 'asc');
 
             // Define the base query
-            $query = User::select('users.id', 'users.name', 'users.email', 'users.address', 'users.is_block_by_admin', 'users.verification_status', 'users.created_at', 'user_questions.gender', 'user_questions.interested')
-                ->leftJoin('user_questions', 'users.id', '=', 'user_questions.user_id')
+            $query = User::select('users.id', 'users.name', 'users.email')
+                // ->leftJoin('user_questions', 'users.id', '=', 'user_questions.user_id')
                 // ->leftJoin('user_first_date_survey_answers', 'users.id', '=', 'user_first_date_survey_answers.user_id')
                 ->where('users.is_verify', '=', '1');
             // ->orderBy('created_at', 'desc');
@@ -131,7 +131,7 @@ class UsersController extends Controller
                 ->addColumn('created_at', function ($item) {
                     return $item->created_at->format('d-m-Y,H:i:s');
                 })
-                ->rawColumns(['created_at', 'gender', 'interested', 'question_answer', 'date_question_answer', 'is_block_by_admin', 'verification_status', 'action'])
+                ->rawColumns(['created_at','action'])
                 ->make(true);
         }
 

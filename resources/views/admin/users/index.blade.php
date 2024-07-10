@@ -73,15 +73,15 @@
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">ID</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Name</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Email</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Location</th>
+                                        <!-- <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Location</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Gender</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Looking for </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Looking for </th> -->
                                         {{-- <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Dob</th> --}}
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Block</th>
+                                        <!-- <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Block</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Image Verify</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Date/Time</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">User Details</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Date Expections</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Date Expections</th> -->
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bold text-dark">Actions</th>
                                     </tr>
                                 </thead>
