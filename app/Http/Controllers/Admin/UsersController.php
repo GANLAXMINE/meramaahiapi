@@ -48,39 +48,39 @@ class UsersController extends Controller
             // Define the base query
             $query = User::select('users.id', 'users.name', 'users.email', 'users.address', 'users.is_block_by_admin', 'users.verification_status', 'users.created_at', 'user_questions.gender', 'user_questions.interested')
                 ->leftJoin('user_questions', 'users.id', '=', 'user_questions.user_id')
-                ->leftJoin('user_first_date_survey_answers', 'users.id', '=', 'user_first_date_survey_answers.user_id')
+                // ->leftJoin('user_first_date_survey_answers', 'users.id', '=', 'user_first_date_survey_answers.user_id')
                 ->where('users.is_verify', '=', '1');
             // ->orderBy('created_at', 'desc');
 
             // Apply filters if they are provided
-            if ($request->has('blockFilter') && $request->input('blockFilter') !== '') {
-                $blockFilter = $request->input('blockFilter');
-                if ($blockFilter !== ':') {
-                    $query->where('users.is_block_by_admin', $blockFilter);
-                }
-            }
+            // if ($request->has('blockFilter') && $request->input('blockFilter') !== '') {
+            //     $blockFilter = $request->input('blockFilter');
+            //     if ($blockFilter !== ':') {
+            //         $query->where('users.is_block_by_admin', $blockFilter);
+            //     }
+            // }
 
-            if ($request->has('verificationFilter') && $request->input('verificationFilter') !== '') {
-                $verificationFilter = $request->input('verificationFilter');
-                if ($verificationFilter !== ':') {
-                    $query->where('users.verification_status', $verificationFilter);
-                }
-            }
+            // if ($request->has('verificationFilter') && $request->input('verificationFilter') !== '') {
+            //     $verificationFilter = $request->input('verificationFilter');
+            //     if ($verificationFilter !== ':') {
+            //         $query->where('users.verification_status', $verificationFilter);
+            //     }
+            // }
 
-            if ($request->has('genderFilter') && $request->input('genderFilter') !== '') {
-                $genderFilter = $request->input('genderFilter');
-                if ($genderFilter !== ':') {
-                    $query->where('user_questions.gender', $genderFilter);
-                }
-            }
+            // if ($request->has('genderFilter') && $request->input('genderFilter') !== '') {
+            //     $genderFilter = $request->input('genderFilter');
+            //     if ($genderFilter !== ':') {
+            //         $query->where('user_questions.gender', $genderFilter);
+            //     }
+            // }
 
-            // Apply interested filter if provided
-            if ($request->has('interestedFilter') && $request->input('interestedFilter') !== '') {
-                $interestedFilter = $request->input('interestedFilter');
-                if ($interestedFilter !== ':') {
-                    $query->where('user_questions.interested', $interestedFilter);
-                }
-            }
+            // // Apply interested filter if provided
+            // if ($request->has('interestedFilter') && $request->input('interestedFilter') !== '') {
+            //     $interestedFilter = $request->input('interestedFilter');
+            //     if ($interestedFilter !== ':') {
+            //         $query->where('user_questions.interested', $interestedFilter);
+            //     }
+            // }
 
 
             // Apply ordering if the column name is valid and exists in the database
@@ -96,35 +96,35 @@ class UsersController extends Controller
 
             return DataTables::of($query)
                 ->addIndexColumn()
-                ->addColumn('gender', function ($item) {
-                    return $item->gender;
-                })
-                ->addColumn('interested', function ($item) {
-                    return $item->interested;
-                })
-                ->addColumn('question_answer', function ($item) {
-                    $count = optional($item->userSignUpQuestion)->count() ?? 0;
-                    return $this->generateButton($count > 0, "/admin/user/question_answer/{$item->id}");
-                })
-                ->addColumn('date_question_answer', function ($item) {
-                    $count = optional($item->dateSurveys)->count() ?? 0;
-                    return $this->generateButton($count > 0, "/admin/user/date_question_answer/{$item->id}");
-                })
-                ->addColumn('is_block_by_admin', function ($item) {
-                    $isChecked = $item->is_block_by_admin == 1 ? ' checked' : '';
-                    $sliderColorClass = $item->is_block_by_admin == 1 ? 'slider-red' : 'slider-gray';
-                    return '<label class="switch"><input type="checkbox" class="changeStatus" value="' . $item->id . '" data-status="' . ($item->is_block_by_admin == 1 ? '0' : '1') . '"' . $isChecked . '><span class="slider ' . $sliderColorClass . ' round"></span></label>';
-                })
-                ->addColumn('verification_status', function ($item) {
-                    $images = [
-                        0 => 'late.png',
-                        1 => 'wall-clock.png',
-                        2 => 'verify.png',
-                        3 => 'reject.png',
-                    ];
-                    $image = isset($images[$item->verification_status]) ? $images[$item->verification_status] : 'unknown_status.png';
-                    return '<img src="' . asset('/img/' . $image) . '" alt="Status" title="Status" style="height: 20px; width: 20px;">';
-                })
+                // ->addColumn('gender', function ($item) {
+                //     return $item->gender;
+                // })
+                // ->addColumn('interested', function ($item) {
+                //     return $item->interested;
+                // })
+                // ->addColumn('question_answer', function ($item) {
+                //     $count = optional($item->userSignUpQuestion)->count() ?? 0;
+                //     return $this->generateButton($count > 0, "/admin/user/question_answer/{$item->id}");
+                // })
+                // ->addColumn('date_question_answer', function ($item) {
+                //     $count = optional($item->dateSurveys)->count() ?? 0;
+                //     return $this->generateButton($count > 0, "/admin/user/date_question_answer/{$item->id}");
+                // })
+                // ->addColumn('is_block_by_admin', function ($item) {
+                //     $isChecked = $item->is_block_by_admin == 1 ? ' checked' : '';
+                //     $sliderColorClass = $item->is_block_by_admin == 1 ? 'slider-red' : 'slider-gray';
+                //     return '<label class="switch"><input type="checkbox" class="changeStatus" value="' . $item->id . '" data-status="' . ($item->is_block_by_admin == 1 ? '0' : '1') . '"' . $isChecked . '><span class="slider ' . $sliderColorClass . ' round"></span></label>';
+                // })
+                // ->addColumn('verification_status', function ($item) {
+                //     $images = [
+                //         0 => 'late.png',
+                //         1 => 'wall-clock.png',
+                //         2 => 'verify.png',
+                //         3 => 'reject.png',
+                //     ];
+                //     $image = isset($images[$item->verification_status]) ? $images[$item->verification_status] : 'unknown_status.png';
+                //     return '<img src="' . asset('/img/' . $image) . '" alt="Status" title="Status" style="height: 20px; width: 20px;">';
+                // })
                 ->addColumn('action', function ($item) {
                     return '<a href="' . url("/admin/users/{$item->id}") . '" title="View User"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i></button></a>';
                 })
@@ -135,34 +135,34 @@ class UsersController extends Controller
                 ->make(true);
         }
 
-        $genders = [
-            0 => "Male",
-            1 => "Female",
-            2 => "Agender",
-            3 => "Ambigender",
-            4 => "Androgyne",
-            5 => "Bigender",
-            6 => "Butch",
-            7 => "Cis female",
-            8 => "Cis woman",
-            9 => "Cisgender",
-            10 => "Demigender",
-            11 => "Gender fluidity",
-            12 => "Gender neutrality",
-            13 => "Gender variance",
-            14 => "Intersex",
-            15 => "Non-binary",
-            16 => "Pangender",
-            17 => "Queer",
-            18 => "Trans woman",
-            19 => "Transgender",
-            20 => "Transsexual",
-            21 => "Transsexual female",
-            22 => "Trigender",
-            23 => "Two-spirit"
-        ];
+        // $genders = [
+        //     0 => "Male",
+        //     1 => "Female",
+        //     2 => "Agender",
+        //     3 => "Ambigender",
+        //     4 => "Androgyne",
+        //     5 => "Bigender",
+        //     6 => "Butch",
+        //     7 => "Cis female",
+        //     8 => "Cis woman",
+        //     9 => "Cisgender",
+        //     10 => "Demigender",
+        //     11 => "Gender fluidity",
+        //     12 => "Gender neutrality",
+        //     13 => "Gender variance",
+        //     14 => "Intersex",
+        //     15 => "Non-binary",
+        //     16 => "Pangender",
+        //     17 => "Queer",
+        //     18 => "Trans woman",
+        //     19 => "Transgender",
+        //     20 => "Transsexual",
+        //     21 => "Transsexual female",
+        //     22 => "Trigender",
+        //     23 => "Two-spirit"
+        // ];
 
-        return view('admin.users.index', compact('role', 'genders'));
+        return view('admin.users.index', compact('role'));
     }
 
 
@@ -346,116 +346,116 @@ class UsersController extends Controller
      *
      * @return void
      */
-    public function destroy(Request $request, $id)
-    {
-        $user = User::findOrFail($id);
-        BlockUser::where('blocked_by', $id)->delete();
-        BlockUser::where('blocked_user', $id)->delete();
-        UserQuestion::where('user_id', $id)->delete();
-        WhoViewedprofile::where('view_by', $id)->delete();
-        UserLike::where('like_by', $id)->delete();
-        UserBookmark::where('bookmark_by', $id)->delete();
-        UserDislike::where('dislike_by', $id)->delete();
-        WhoViewedprofile::where('view_user', $id)->delete();
-        UserLike::where('like_user', $id)->delete();
-        UserBookmark::where('bookmark_user', $id)->delete();
-        UserDislike::where('dislike_user', $id)->delete();
-        // UserChat::where('sender_id', $id)->orWhere('receiver_id', $id)->delete();
-        Notification::whereRaw('JSON_UNQUOTE(JSON_EXTRACT(message, "$.target_id")) = ?', [$id])
-            ->orWhereRaw('JSON_UNQUOTE(JSON_EXTRACT(message, "$.created_by")) = ?', [$id])
-            ->delete();
-        if ($request->ajax()) {
-            if (User::destroy($id)) {
-                $data = 'Success';
-            } else {
-                $data = 'Failed';
-            }
-            return response()->json($data);
-        }
-        User::destroy($id);
-        return redirect('admin/user/list')->with('flash_message', ' User deleted!');
-    }
+    // public function destroy(Request $request, $id)
+    // {
+    //     $user = User::findOrFail($id);
+    //     BlockUser::where('blocked_by', $id)->delete();
+    //     BlockUser::where('blocked_user', $id)->delete();
+    //     UserQuestion::where('user_id', $id)->delete();
+    //     WhoViewedprofile::where('view_by', $id)->delete();
+    //     UserLike::where('like_by', $id)->delete();
+    //     UserBookmark::where('bookmark_by', $id)->delete();
+    //     UserDislike::where('dislike_by', $id)->delete();
+    //     WhoViewedprofile::where('view_user', $id)->delete();
+    //     UserLike::where('like_user', $id)->delete();
+    //     UserBookmark::where('bookmark_user', $id)->delete();
+    //     UserDislike::where('dislike_user', $id)->delete();
+    //     // UserChat::where('sender_id', $id)->orWhere('receiver_id', $id)->delete();
+    //     Notification::whereRaw('JSON_UNQUOTE(JSON_EXTRACT(message, "$.target_id")) = ?', [$id])
+    //         ->orWhereRaw('JSON_UNQUOTE(JSON_EXTRACT(message, "$.created_by")) = ?', [$id])
+    //         ->delete();
+    //     if ($request->ajax()) {
+    //         if (User::destroy($id)) {
+    //             $data = 'Success';
+    //         } else {
+    //             $data = 'Failed';
+    //         }
+    //         return response()->json($data);
+    //     }
+    //     User::destroy($id);
+    //     return redirect('admin/user/list')->with('flash_message', ' User deleted!');
+    // }
 
 
-    public function changeStatus(Request $request)
-    {
+    // public function changeStatus(Request $request)
+    // {
 
-        $user = User::find($request->id);
+    //     $user = User::find($request->id);
 
-        if (!$user) {
-            return response()->json(["success" => false, 'message' => 'User not found!']);
-        }
+    //     if (!$user) {
+    //         return response()->json(["success" => false, 'message' => 'User not found!']);
+    //     }
 
-        $oldVerificationStatus = $user->verification_status;
-        $newVerificationStatus = $request->status;
-        // dd($newVerificationStatus);
+    //     $oldVerificationStatus = $user->verification_status;
+    //     $newVerificationStatus = $request->status;
+    //     // dd($newVerificationStatus);
 
-        $user->update(['verification_status' => $newVerificationStatus]);
+    //     $user->update(['verification_status' => $newVerificationStatus]);
 
-        // Notification about verification status change
-        $notificationTitle = 'Verification Status Change';
-        $notificationBody = "Your verification status has been changed from {$oldVerificationStatus} to {$newVerificationStatus}.";
-        $targetModel = 'verification_status_change';
+    //     // Notification about verification status change
+    //     $notificationTitle = 'Verification Status Change';
+    //     $notificationBody = "Your verification status has been changed from {$oldVerificationStatus} to {$newVerificationStatus}.";
+    //     $targetModel = 'verification_status_change';
 
-        if ($newVerificationStatus == 3) {
-            // If verification status is rejected (status code 2)
-            $targetModel = 'image_rejected';
-        } elseif ($newVerificationStatus == 2) {
-            // If verification status is verified (status code 1)
-            $targetModel = 'image_verified';
-        }
-        $userLanguage =  $user->language;
-        $notificationType = $targetModel;
-        $titleColumn = "title_" . $userLanguage;
-        $bodyColumn = "body_" . $userLanguage;
-        $userTranslatedNotification = NotificationTranslate::where('notification_type', $notificationType)->first();
-        $title = $userTranslatedNotification->$titleColumn;
-        $body = $userTranslatedNotification->$bodyColumn;
+    //     if ($newVerificationStatus == 3) {
+    //         // If verification status is rejected (status code 2)
+    //         $targetModel = 'image_rejected';
+    //     } elseif ($newVerificationStatus == 2) {
+    //         // If verification status is verified (status code 1)
+    //         $targetModel = 'image_verified';
+    //     }
+    //     $userLanguage =  $user->language;
+    //     $notificationType = $targetModel;
+    //     $titleColumn = "title_" . $userLanguage;
+    //     $bodyColumn = "body_" . $userLanguage;
+    //     $userTranslatedNotification = NotificationTranslate::where('notification_type', $notificationType)->first();
+    //     $title = $userTranslatedNotification->$titleColumn;
+    //     $body = $userTranslatedNotification->$bodyColumn;
 
-        // Get the admin ID using the Admin model method
-        $adminId = Admin::getAuthenticatedAdminId();
-        // dd($adminId);
+    //     // Get the admin ID using the Admin model method
+    //     $adminId = Admin::getAuthenticatedAdminId();
+    //     // dd($adminId);
 
-        if ($adminId !== null) {
-            // Send the notification
-            ApiController::pushNotifications([
-                'title' => $title,
-                'body' => $body,
-                'data' => [
-                    'target_id' => $user->id,
-                    'created_by' => $adminId,
-                    'target_model' => $targetModel,
-                ]
-            ], $user->id, true);
-            return response()->json(["success" => true, 'message' => 'User updated successfully']);
-        } else {
-            return response()->json(["success" => false, 'message' => 'Admin not authenticated']);
-        }
-    }
-    public function updateStatus(Request $request)
-    {
-        $userId = $request->id;
-        $newStatus = $request->is_block_by_admin;
+    //     if ($adminId !== null) {
+    //         // Send the notification
+    //         ApiController::pushNotifications([
+    //             'title' => $title,
+    //             'body' => $body,
+    //             'data' => [
+    //                 'target_id' => $user->id,
+    //                 'created_by' => $adminId,
+    //                 'target_model' => $targetModel,
+    //             ]
+    //         ], $user->id, true);
+    //         return response()->json(["success" => true, 'message' => 'User updated successfully']);
+    //     } else {
+    //         return response()->json(["success" => false, 'message' => 'Admin not authenticated']);
+    //     }
+    // }
+    // public function updateStatus(Request $request)
+    // {
+    //     $userId = $request->id;
+    //     $newStatus = $request->is_block_by_admin;
 
-        // Update user status
-        User::where('id', $userId)->update(['is_block_by_admin' => $newStatus]);
-        if ($newStatus == 1) {
-            $tokens = Token::where('user_id', $userId)->get();
-            // dd($tokens);
+    //     // Update user status
+    //     User::where('id', $userId)->update(['is_block_by_admin' => $newStatus]);
+    //     if ($newStatus == 1) {
+    //         $tokens = Token::where('user_id', $userId)->get();
+    //         // dd($tokens);
 
-            foreach ($tokens as $token) {
-                $token->forceDelete();
-            }
-        }
+    //         foreach ($tokens as $token) {
+    //             $token->forceDelete();
+    //         }
+    //     }
 
 
-        return response()->json(["success" => true, 'message' => 'Status updated!']);
-    }
+    //     return response()->json(["success" => true, 'message' => 'Status updated!']);
+    // }
 
-    public function create()
-    {
-        return view('admin.push_notifications.create');
-    }
+    // public function create()
+    // {
+    //     return view('admin.push_notifications.create');
+    // }
 
     // public function store(Request $request)
     // {
@@ -494,27 +494,27 @@ class UsersController extends Controller
     //         ]
     //     ], $user->id, true);
     // }
-    public function store(Request $request)
-    {
-        $title = $request->input('title');
-        $body = $request->input('body');
-        $targetModel = $request->input('target_model', 'admin_notifications');
+    // public function store(Request $request)
+    // {
+    //     $title = $request->input('title');
+    //     $body = $request->input('body');
+    //     $targetModel = $request->input('target_model', 'admin_notifications');
 
-        $this->sendNotificationsToAllUsers($title, $body, $targetModel);
+    //     $this->sendNotificationsToAllUsers($title, $body, $targetModel);
 
-        return redirect('admin/notification/form')->with('flash_message', 'Notification added!');
-    }
+    //     return redirect('admin/notification/form')->with('flash_message', 'Notification added!');
+    // }
 
-    private function sendNotificationsToAllUsers($title, $body, $targetModel)
-    {
-        $adminId = Admin::getAuthenticatedAdminId();
+    // private function sendNotificationsToAllUsers($title, $body, $targetModel)
+    // {
+    //     $adminId = Admin::getAuthenticatedAdminId();
 
-        if ($adminId !== null) {
-            $users = User::all();
+    //     if ($adminId !== null) {
+    //         $users = User::all();
 
-            foreach ($users as $user) {
-                SendNotificationJob::dispatch($user, $title, $body, $targetModel, $adminId);
-            }
-        }
-    }
+    //         foreach ($users as $user) {
+    //             SendNotificationJob::dispatch($user, $title, $body, $targetModel, $adminId);
+    //         }
+    //     }
+    // }
 }
