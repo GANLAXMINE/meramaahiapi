@@ -42,7 +42,7 @@
           <span class="nav-link-text ms-1">Match</span>
         </a>
       </li>
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <a class="nav-link text-dark " href="{{ url('/admin/survey_questions') }}">
           <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
             <img style="height:20px;width:20px;" class="icon_color" id="Configuration" src="{{ asset('/img/survey.png') }}" alt="">
@@ -106,7 +106,7 @@
           </div>
           <span class="nav-link-text ms-1">FAQ</span>
         </a>
-      </li>
+      </li> -->
 
     </ul>
   </div>
