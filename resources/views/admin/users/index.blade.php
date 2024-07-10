@@ -103,7 +103,7 @@
             processing: true,
             serverSide: true,
             ajax: "{{ url('admin/user/list') }}",
-            order: [[ 8, 'desc' ], [ 1, 'desc' ]],
+            // order: [[ 8, 'desc' ], [ 1, 'desc' ]],
             columns: [{
                     data: null,
                     name: 'id',
