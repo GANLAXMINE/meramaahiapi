@@ -66,50 +66,6 @@
                             {{-- <a href="{{URL::to('admin/user/create')}}" class="btn btn-success btn-sm" title="Add New User">
                             <i class="fa fa-plus" aria-hidden="true"></i> Add User
                             </a> --}}
-<!-- 
-                            <div class="selectboxwrap">
-                                <div class="filter">
-                                    <div class="toggleswtich">
-                                        <select id="combinedFilter" class="form-select">
-                                            <option value="">All Users</option>
-                                            <option value="0:">Unblocked Users</option>
-                                            <option value="1:">Blocked Users</option>
-                                            <option value=":0">Pending Users</option>
-                                            <option value=":2">Verified Users</option>
-                                            <option value=":3">Rejected Users</option>
-                                            <option value=":1">In Progress Users</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="gender_profile">
-                                    <div class="filter1">
-                                        <div class="toggleswtich">
-                                            <select id="genderFilter" class="form-select">
-                                                <option value="">Genders</option>
-                                                @foreach($genders as $key => $gender)
-                                                <option value="{{ $key }}">{{ $gender }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="filter1">
-                                        <div class="toggleswtich">
-                                           
-                                            <select id="interestedFilter" class="form-select">
-                                                <option value="">Looking For</option>
-                                                @foreach($genders as $key => $interest)
-                                                <option value="{{ $key }}">{{ $interest }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div> -->
-
-
-
 
                             <table class="table align-items-center mb-0 data-tables">
                                 <thead style="text-align: center">
@@ -117,15 +73,15 @@
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">ID</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Name</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Email</th>
-                                        <!-- <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Location</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Gender</th> -->
-                                        <!-- <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Looking for </th> -->
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Location</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Gender</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Looking for </th>
                                         {{-- <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Dob</th> --}}
-                                        <!-- <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Block</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Block</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Image Verify</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Date/Time</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">User Details</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Date Expections</th> -->
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Date Expections</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bold text-dark">Actions</th>
                                     </tr>
                                 </thead>
@@ -163,32 +119,32 @@
                     data: 'email',
                     name: 'email'
                 },
-                // {
-                //     data: 'address',
-                //     name: 'address',
-                //     render: function(data, type, row) {
-                //         return data ? data : 'N/A';
-                //     }
-                // }, {
-                //     data: 'gender',
-                //     name: 'gender',
-                //     render: function(data) {
-                //         return genders[data] || 'N/A';
-                //     }
-                // },
-                // {
-                //     data: 'interested',
-                //     name: 'interested',
-                //     render: function(data) {
+                {
+                    data: 'address',
+                    name: 'address',
+                    render: function(data, type, row) {
+                        return data ? data : 'N/A';
+                    }
+                }, {
+                    data: 'gender',
+                    name: 'gender',
+                    render: function(data) {
+                        return genders[data] || 'N/A';
+                    }
+                },
+                {
+                    data: 'interested',
+                    name: 'interested',
+                    render: function(data) {
 
-                //         return genders[data] || 'N/A';
-                //     }
-                // },
+                        return genders[data] || 'N/A';
+                    }
+                },
 
-                // {
-                //     data: 'is_block_by_admin',
-                //     name: 'is_block_by_admin'
-                // },
+                {
+                    data: 'is_block_by_admin',
+                    name: 'is_block_by_admin'
+                },
                 {
                     data: 'verification_status',
                     name: 'verification_status'
@@ -197,18 +153,18 @@
                     data: 'created_at',
                     name: 'created_at'
                 },
-                // {
-                //     data: 'question_answer',
-                //     name: 'question_answer',
-                //     orderable: false,
-                //     searchable: false
-                // },
-                // {
-                //     data: 'date_question_answer',
-                //     name: 'date_question_answer',
-                //     orderable: false,
-                //     searchable: false
-                // },
+                {
+                    data: 'question_answer',
+                    name: 'question_answer',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'date_question_answer',
+                    name: 'date_question_answer',
+                    orderable: false,
+                    searchable: false
+                },
                 {
                     data: 'action',
                     name: 'action',
