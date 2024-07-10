@@ -46,11 +46,11 @@ class UsersController extends Controller
             $orderDirection = $request->input('order.0.dir', 'asc');
 
             // Define the base query
-            $query = User::select('users.id', 'users.name', 'users.email', 'users.created_at')
+            $query = User::select('users.id', 'users.first_name', 'users.email', 'users.created_at')
                 ->where('users.is_verify', '=', '1');
 
             // Apply ordering if the column name is valid and exists in the database
-            if (in_array($orderColumnName, ['id', 'name', 'email', 'created_at'])) {
+            if (in_array($orderColumnName, ['id', 'first_name', 'email', 'created_at'])) {
                 $query->orderBy($orderColumnName, $orderDirection);
             }
 
@@ -68,6 +68,7 @@ class UsersController extends Controller
 
         return view('admin.users.index', compact('role'));
     }
+
 
 
 
@@ -251,116 +252,116 @@ class UsersController extends Controller
      *
      * @return void
      */
-    // public function destroy(Request $request, $id)
-    // {
-    //     $user = User::findOrFail($id);
-    //     BlockUser::where('blocked_by', $id)->delete();
-    //     BlockUser::where('blocked_user', $id)->delete();
-    //     UserQuestion::where('user_id', $id)->delete();
-    //     WhoViewedprofile::where('view_by', $id)->delete();
-    //     UserLike::where('like_by', $id)->delete();
-    //     UserBookmark::where('bookmark_by', $id)->delete();
-    //     UserDislike::where('dislike_by', $id)->delete();
-    //     WhoViewedprofile::where('view_user', $id)->delete();
-    //     UserLike::where('like_user', $id)->delete();
-    //     UserBookmark::where('bookmark_user', $id)->delete();
-    //     UserDislike::where('dislike_user', $id)->delete();
-    //     // UserChat::where('sender_id', $id)->orWhere('receiver_id', $id)->delete();
-    //     Notification::whereRaw('JSON_UNQUOTE(JSON_EXTRACT(message, "$.target_id")) = ?', [$id])
-    //         ->orWhereRaw('JSON_UNQUOTE(JSON_EXTRACT(message, "$.created_by")) = ?', [$id])
-    //         ->delete();
-    //     if ($request->ajax()) {
-    //         if (User::destroy($id)) {
-    //             $data = 'Success';
-    //         } else {
-    //             $data = 'Failed';
-    //         }
-    //         return response()->json($data);
-    //     }
-    //     User::destroy($id);
-    //     return redirect('admin/user/list')->with('flash_message', ' User deleted!');
-    // }
+    public function destroy(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        BlockUser::where('blocked_by', $id)->delete();
+        BlockUser::where('blocked_user', $id)->delete();
+        UserQuestion::where('user_id', $id)->delete();
+        WhoViewedprofile::where('view_by', $id)->delete();
+        UserLike::where('like_by', $id)->delete();
+        UserBookmark::where('bookmark_by', $id)->delete();
+        UserDislike::where('dislike_by', $id)->delete();
+        WhoViewedprofile::where('view_user', $id)->delete();
+        UserLike::where('like_user', $id)->delete();
+        UserBookmark::where('bookmark_user', $id)->delete();
+        UserDislike::where('dislike_user', $id)->delete();
+        // UserChat::where('sender_id', $id)->orWhere('receiver_id', $id)->delete();
+        Notification::whereRaw('JSON_UNQUOTE(JSON_EXTRACT(message, "$.target_id")) = ?', [$id])
+            ->orWhereRaw('JSON_UNQUOTE(JSON_EXTRACT(message, "$.created_by")) = ?', [$id])
+            ->delete();
+        if ($request->ajax()) {
+            if (User::destroy($id)) {
+                $data = 'Success';
+            } else {
+                $data = 'Failed';
+            }
+            return response()->json($data);
+        }
+        User::destroy($id);
+        return redirect('admin/user/list')->with('flash_message', ' User deleted!');
+    }
 
 
-    // public function changeStatus(Request $request)
-    // {
+    public function changeStatus(Request $request)
+    {
 
-    //     $user = User::find($request->id);
+        $user = User::find($request->id);
 
-    //     if (!$user) {
-    //         return response()->json(["success" => false, 'message' => 'User not found!']);
-    //     }
+        if (!$user) {
+            return response()->json(["success" => false, 'message' => 'User not found!']);
+        }
 
-    //     $oldVerificationStatus = $user->verification_status;
-    //     $newVerificationStatus = $request->status;
-    //     // dd($newVerificationStatus);
+        $oldVerificationStatus = $user->verification_status;
+        $newVerificationStatus = $request->status;
+        // dd($newVerificationStatus);
 
-    //     $user->update(['verification_status' => $newVerificationStatus]);
+        $user->update(['verification_status' => $newVerificationStatus]);
 
-    //     // Notification about verification status change
-    //     $notificationTitle = 'Verification Status Change';
-    //     $notificationBody = "Your verification status has been changed from {$oldVerificationStatus} to {$newVerificationStatus}.";
-    //     $targetModel = 'verification_status_change';
+        // Notification about verification status change
+        $notificationTitle = 'Verification Status Change';
+        $notificationBody = "Your verification status has been changed from {$oldVerificationStatus} to {$newVerificationStatus}.";
+        $targetModel = 'verification_status_change';
 
-    //     if ($newVerificationStatus == 3) {
-    //         // If verification status is rejected (status code 2)
-    //         $targetModel = 'image_rejected';
-    //     } elseif ($newVerificationStatus == 2) {
-    //         // If verification status is verified (status code 1)
-    //         $targetModel = 'image_verified';
-    //     }
-    //     $userLanguage =  $user->language;
-    //     $notificationType = $targetModel;
-    //     $titleColumn = "title_" . $userLanguage;
-    //     $bodyColumn = "body_" . $userLanguage;
-    //     $userTranslatedNotification = NotificationTranslate::where('notification_type', $notificationType)->first();
-    //     $title = $userTranslatedNotification->$titleColumn;
-    //     $body = $userTranslatedNotification->$bodyColumn;
+        if ($newVerificationStatus == 3) {
+            // If verification status is rejected (status code 2)
+            $targetModel = 'image_rejected';
+        } elseif ($newVerificationStatus == 2) {
+            // If verification status is verified (status code 1)
+            $targetModel = 'image_verified';
+        }
+        $userLanguage =  $user->language;
+        $notificationType = $targetModel;
+        $titleColumn = "title_" . $userLanguage;
+        $bodyColumn = "body_" . $userLanguage;
+        $userTranslatedNotification = NotificationTranslate::where('notification_type', $notificationType)->first();
+        $title = $userTranslatedNotification->$titleColumn;
+        $body = $userTranslatedNotification->$bodyColumn;
 
-    //     // Get the admin ID using the Admin model method
-    //     $adminId = Admin::getAuthenticatedAdminId();
-    //     // dd($adminId);
+        // Get the admin ID using the Admin model method
+        $adminId = Admin::getAuthenticatedAdminId();
+        // dd($adminId);
 
-    //     if ($adminId !== null) {
-    //         // Send the notification
-    //         ApiController::pushNotifications([
-    //             'title' => $title,
-    //             'body' => $body,
-    //             'data' => [
-    //                 'target_id' => $user->id,
-    //                 'created_by' => $adminId,
-    //                 'target_model' => $targetModel,
-    //             ]
-    //         ], $user->id, true);
-    //         return response()->json(["success" => true, 'message' => 'User updated successfully']);
-    //     } else {
-    //         return response()->json(["success" => false, 'message' => 'Admin not authenticated']);
-    //     }
-    // }
-    // public function updateStatus(Request $request)
-    // {
-    //     $userId = $request->id;
-    //     $newStatus = $request->is_block_by_admin;
+        if ($adminId !== null) {
+            // Send the notification
+            ApiController::pushNotifications([
+                'title' => $title,
+                'body' => $body,
+                'data' => [
+                    'target_id' => $user->id,
+                    'created_by' => $adminId,
+                    'target_model' => $targetModel,
+                ]
+            ], $user->id, true);
+            return response()->json(["success" => true, 'message' => 'User updated successfully']);
+        } else {
+            return response()->json(["success" => false, 'message' => 'Admin not authenticated']);
+        }
+    }
+    public function updateStatus(Request $request)
+    {
+        $userId = $request->id;
+        $newStatus = $request->is_block_by_admin;
 
-    //     // Update user status
-    //     User::where('id', $userId)->update(['is_block_by_admin' => $newStatus]);
-    //     if ($newStatus == 1) {
-    //         $tokens = Token::where('user_id', $userId)->get();
-    //         // dd($tokens);
+        // Update user status
+        User::where('id', $userId)->update(['is_block_by_admin' => $newStatus]);
+        if ($newStatus == 1) {
+            $tokens = Token::where('user_id', $userId)->get();
+            // dd($tokens);
 
-    //         foreach ($tokens as $token) {
-    //             $token->forceDelete();
-    //         }
-    //     }
+            foreach ($tokens as $token) {
+                $token->forceDelete();
+            }
+        }
 
 
-    //     return response()->json(["success" => true, 'message' => 'Status updated!']);
-    // }
+        return response()->json(["success" => true, 'message' => 'Status updated!']);
+    }
 
-    // public function create()
-    // {
-    //     return view('admin.push_notifications.create');
-    // }
+    public function create()
+    {
+        return view('admin.push_notifications.create');
+    }
 
     // public function store(Request $request)
     // {
@@ -399,27 +400,27 @@ class UsersController extends Controller
     //         ]
     //     ], $user->id, true);
     // }
-    // public function store(Request $request)
-    // {
-    //     $title = $request->input('title');
-    //     $body = $request->input('body');
-    //     $targetModel = $request->input('target_model', 'admin_notifications');
+    public function store(Request $request)
+    {
+        $title = $request->input('title');
+        $body = $request->input('body');
+        $targetModel = $request->input('target_model', 'admin_notifications');
 
-    //     $this->sendNotificationsToAllUsers($title, $body, $targetModel);
+        $this->sendNotificationsToAllUsers($title, $body, $targetModel);
 
-    //     return redirect('admin/notification/form')->with('flash_message', 'Notification added!');
-    // }
+        return redirect('admin/notification/form')->with('flash_message', 'Notification added!');
+    }
 
-    // private function sendNotificationsToAllUsers($title, $body, $targetModel)
-    // {
-    //     $adminId = Admin::getAuthenticatedAdminId();
+    private function sendNotificationsToAllUsers($title, $body, $targetModel)
+    {
+        $adminId = Admin::getAuthenticatedAdminId();
 
-    //     if ($adminId !== null) {
-    //         $users = User::all();
+        if ($adminId !== null) {
+            $users = User::all();
 
-    //         foreach ($users as $user) {
-    //             SendNotificationJob::dispatch($user, $title, $body, $targetModel, $adminId);
-    //         }
-    //     }
-    // }
+            foreach ($users as $user) {
+                SendNotificationJob::dispatch($user, $title, $body, $targetModel, $adminId);
+            }
+        }
+    }
 }

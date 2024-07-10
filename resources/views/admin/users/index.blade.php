@@ -7,13 +7,6 @@
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
         <div class="container-fluid py-1 px-3">
-            <!-- <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-                <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
-                <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Cuisine</li>
-            </ol>
-            <h6 class="font-weight-bolder mb-0">Cuisine</h6>
-            </nav> -->
             <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                 <div class="ms-md-auto pe-md-3 d-flex align-items-center">
                 </div>
@@ -46,7 +39,6 @@
                             </li>
                         </ul>
                     </li>
-
                 </ul>
             </div>
         </div>
@@ -63,25 +55,12 @@
                     </div>
                     <div class="card-body px-0 pb-2">
                         <div class="table-responsive ">
-                            {{-- <a href="{{URL::to('admin/user/create')}}" class="btn btn-success btn-sm" title="Add New User">
-                            <i class="fa fa-plus" aria-hidden="true"></i> Add User
-                            </a> --}}
-
                             <table class="table align-items-center mb-0 data-tables">
                                 <thead style="text-align: center">
                                     <tr>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">ID</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Name</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Email</th>
-                                        <!-- <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Location</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Gender</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Looking for </th> -->
-                                        {{-- <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Dob</th> --}}
-                                        <!-- <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Block</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Image Verify</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Date/Time</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">User Details</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bold text-dark">Date Expections</th> -->
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bold text-dark">Actions</th>
                                     </tr>
                                 </thead>
@@ -93,11 +72,9 @@
                 </div>
             </div>
         </div>
-
     </div>
 </main>
 <script>
-   
     $(function() {
         var table = $('.data-tables').DataTable({
             processing: true,
@@ -111,8 +88,8 @@
                     }
                 },
                 {
-                    data: 'name',
-                    name: 'name'
+                    data: 'first_name',
+                    name: 'first_name'
                 },
                 {
                     data: 'email',
@@ -130,52 +107,6 @@
                 },
             ]
         });
-        // $('#combinedFilter').change(function() {
-        //     var combinedFilterValue = $(this).val();
-        //     var blockFilter = combinedFilterValue.charAt(0);
-        //     var verificationFilter = combinedFilterValue.charAt(1);
-
-        //     if (blockFilter === '' && verificationFilter === '') {
-        //         // Reset the URL to fetch all users
-        //         table.ajax.url("{{ route('admin.user.list') }}").load();
-        //     } else {
-        //         // Fetch data based on the selected filter
-        //         table.ajax.url("{{ route('admin.user.list') }}?" + $.param({
-        //             blockFilter: blockFilter,
-        //             verificationFilter: verificationFilter,
-        //         })).load();
-        //     }
-        // });
-        $('#combinedFilter, #genderFilter, #interestedFilter').change(function() {
-            var blockFilterValue = $('#combinedFilter').val().charAt(0);
-            var verificationFilterValue = $('#combinedFilter').val().charAt(1);
-            var genderFilterValue = $('#genderFilter').val();
-            var interestedFilterValue = $('#interestedFilter').val();
-
-            var queryParams = {};
-            if (blockFilterValue !== '') {
-                queryParams.blockFilter = blockFilterValue;
-            }
-            if (verificationFilterValue !== '') {
-                queryParams.verificationFilter = verificationFilterValue;
-            }
-            if (genderFilterValue !== '') {
-                queryParams.genderFilter = genderFilterValue;
-            }
-            if (interestedFilterValue !== '') {
-                queryParams.interestedFilter = interestedFilterValue;
-            }
-
-            if (Object.keys(queryParams).length === 0) {
-                // Reset the URL to fetch all users
-                table.ajax.url("{{ route('admin.user.list') }}").load();
-            } else {
-                // Fetch data based on the selected filters
-                table.ajax.url("{{ route('admin.user.list') }}?" + $.param(queryParams)).load();
-            }
-        });
-
-
 
         $('.data-tables').on('click', '.btnDelete', function(e) {
             e.preventDefault();
@@ -210,6 +141,7 @@
                 }
             });
         });
+
         $('.data-tables').on('click', '.changeStatus', function(e) {
             e.preventDefault();
             var id = $(this).attr('value');
@@ -236,15 +168,8 @@
                         contentType: false,
                         cache: false,
                         processData: false,
-                        beforeSend: function() {
-                            //                        Swal.showLoading();
-                        },
                         success: function(data) {
-
-                            console.log(data);
-                            console.log(data.success);
                             if (data.success == false) {
-
                                 Swal.fire(
                                     "User can't set to active state!",
                                     data.message,
@@ -254,12 +179,11 @@
                                 });
                             } else {
                                 Swal.fire(
-                                    'User  Block Status !',
-                                    'Changed Succussfully',
+                                    'User Block Status!',
+                                    'Changed Successfully',
                                     'success'
                                 ).then(() => {
                                     location.reload(true);
-                                    // table.ajax.reload(null, false);
                                 });
                             }
                         }
@@ -267,7 +191,6 @@
                 }
             });
         });
-
     });
 </script>
 @endsection
