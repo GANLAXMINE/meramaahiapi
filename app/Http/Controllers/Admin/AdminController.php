@@ -16,9 +16,9 @@ class AdminController extends Controller
     public function index()
     {
         $user = User::where('is_verify', '=', '1')->count();
-        $userCount = $this->userMatchCount();
+        // $userCount = $this->userMatchCount();
 
-        return view('admin.dashboard', compact('user', 'userCount'));
+        return view('admin.dashboard', compact('user'));
     }
 
     public function login()
