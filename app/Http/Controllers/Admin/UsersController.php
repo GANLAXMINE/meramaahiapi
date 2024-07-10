@@ -46,124 +46,29 @@ class UsersController extends Controller
             $orderDirection = $request->input('order.0.dir', 'asc');
 
             // Define the base query
-            $query = User::select('users.id', 'users.name', 'users.email')
-                // ->leftJoin('user_questions', 'users.id', '=', 'user_questions.user_id')
-                // ->leftJoin('user_first_date_survey_answers', 'users.id', '=', 'user_first_date_survey_answers.user_id')
+            $query = User::select('users.id', 'users.name', 'users.email', 'users.created_at')
                 ->where('users.is_verify', '=', '1');
-            // ->orderBy('created_at', 'desc');
-
-            // Apply filters if they are provided
-            // if ($request->has('blockFilter') && $request->input('blockFilter') !== '') {
-            //     $blockFilter = $request->input('blockFilter');
-            //     if ($blockFilter !== ':') {
-            //         $query->where('users.is_block_by_admin', $blockFilter);
-            //     }
-            // }
-
-            // if ($request->has('verificationFilter') && $request->input('verificationFilter') !== '') {
-            //     $verificationFilter = $request->input('verificationFilter');
-            //     if ($verificationFilter !== ':') {
-            //         $query->where('users.verification_status', $verificationFilter);
-            //     }
-            // }
-
-            // if ($request->has('genderFilter') && $request->input('genderFilter') !== '') {
-            //     $genderFilter = $request->input('genderFilter');
-            //     if ($genderFilter !== ':') {
-            //         $query->where('user_questions.gender', $genderFilter);
-            //     }
-            // }
-
-            // // Apply interested filter if provided
-            // if ($request->has('interestedFilter') && $request->input('interestedFilter') !== '') {
-            //     $interestedFilter = $request->input('interestedFilter');
-            //     if ($interestedFilter !== ':') {
-            //         $query->where('user_questions.interested', $interestedFilter);
-            //     }
-            // }
-
 
             // Apply ordering if the column name is valid and exists in the database
-            if (in_array($orderColumnName, [
-                'id', 'name', 'address', 'email', 'gender', 'interested', 'is_block_by_admin', 'verification_status', 'created_at'
-            ])) {
-                if ($orderColumnName == 'gender' || $orderColumnName == 'interested') {
-                    $query->orderBy('user_questions.' . $orderColumnName, $orderDirection);
-                } else {
-                    $query->orderBy($orderColumnName, $orderDirection);
-                }
+            if (in_array($orderColumnName, ['id', 'name', 'email', 'created_at'])) {
+                $query->orderBy($orderColumnName, $orderDirection);
             }
 
             return DataTables::of($query)
                 ->addIndexColumn()
-                // ->addColumn('gender', function ($item) {
-                //     return $item->gender;
-                // })
-                // ->addColumn('interested', function ($item) {
-                //     return $item->interested;
-                // })
-                // ->addColumn('question_answer', function ($item) {
-                //     $count = optional($item->userSignUpQuestion)->count() ?? 0;
-                //     return $this->generateButton($count > 0, "/admin/user/question_answer/{$item->id}");
-                // })
-                // ->addColumn('date_question_answer', function ($item) {
-                //     $count = optional($item->dateSurveys)->count() ?? 0;
-                //     return $this->generateButton($count > 0, "/admin/user/date_question_answer/{$item->id}");
-                // })
-                // ->addColumn('is_block_by_admin', function ($item) {
-                //     $isChecked = $item->is_block_by_admin == 1 ? ' checked' : '';
-                //     $sliderColorClass = $item->is_block_by_admin == 1 ? 'slider-red' : 'slider-gray';
-                //     return '<label class="switch"><input type="checkbox" class="changeStatus" value="' . $item->id . '" data-status="' . ($item->is_block_by_admin == 1 ? '0' : '1') . '"' . $isChecked . '><span class="slider ' . $sliderColorClass . ' round"></span></label>';
-                // })
-                // ->addColumn('verification_status', function ($item) {
-                //     $images = [
-                //         0 => 'late.png',
-                //         1 => 'wall-clock.png',
-                //         2 => 'verify.png',
-                //         3 => 'reject.png',
-                //     ];
-                //     $image = isset($images[$item->verification_status]) ? $images[$item->verification_status] : 'unknown_status.png';
-                //     return '<img src="' . asset('/img/' . $image) . '" alt="Status" title="Status" style="height: 20px; width: 20px;">';
-                // })
                 ->addColumn('action', function ($item) {
                     return '<a href="' . url("/admin/users/{$item->id}") . '" title="View User"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i></button></a>';
                 })
                 ->addColumn('created_at', function ($item) {
-                    return $item->created_at->format('d-m-Y,H:i:s');
+                    return $item->created_at->format('d-m-Y, H:i:s');
                 })
-                ->rawColumns(['created_at','action'])
+                ->rawColumns(['created_at', 'action'])
                 ->make(true);
         }
 
-        // $genders = [
-        //     0 => "Male",
-        //     1 => "Female",
-        //     2 => "Agender",
-        //     3 => "Ambigender",
-        //     4 => "Androgyne",
-        //     5 => "Bigender",
-        //     6 => "Butch",
-        //     7 => "Cis female",
-        //     8 => "Cis woman",
-        //     9 => "Cisgender",
-        //     10 => "Demigender",
-        //     11 => "Gender fluidity",
-        //     12 => "Gender neutrality",
-        //     13 => "Gender variance",
-        //     14 => "Intersex",
-        //     15 => "Non-binary",
-        //     16 => "Pangender",
-        //     17 => "Queer",
-        //     18 => "Trans woman",
-        //     19 => "Transgender",
-        //     20 => "Transsexual",
-        //     21 => "Transsexual female",
-        //     22 => "Trigender",
-        //     23 => "Two-spirit"
-        // ];
-
         return view('admin.users.index', compact('role'));
     }
+
 
 
     private function generateButton($exists, $url)
