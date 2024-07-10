@@ -85,7 +85,7 @@
                 </div>
               </a>
             </div>
-            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <!-- <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
               <a href="{{ url('/admin/match') }}">
                 <div class="card">
                   <div class="card-header p-3 pt-2">
@@ -105,7 +105,7 @@
                   
                 </div>
               </a>
-            </div>
+            </div> -->
             <!-- <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
               <a href="#">
                 <div class="card">

@@ -14,9 +14,8 @@ class AdminSeeder extends seeder
     public function run() {
         $data = [
             'name' => 'admin',
-            'email' => 'admin@hito.com',
+            'email' => 'admin@meramaahi.com',
             'password' => Hash::make('12345678'),
-                // 'phone' => '98166422',
         ];
 
         Admin::create($data);
